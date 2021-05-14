@@ -282,8 +282,8 @@ def main():
 
     # STFT W/ UPSAMPLE FFT ######################################
     UPSAMPLE_FACTOR = 100
-    WIN_SIZE = 4096
-    HOP_SIZE = 256
+    WIN_SIZE = sr # Window Size == 1 Second
+    HOP_SIZE = int(sr * .1) # 90% Overlap == 10% Hop
     WINDOW = np.hanning(WIN_SIZE)
     N_HOPS = int(np.ceil((len(fi_fdat) * 1.0) / HOP_SIZE))
     ZEROS_NEEDED = ((HOP_SIZE * N_HOPS) + WIN_SIZE) - len(fi_fdat)
@@ -333,7 +333,7 @@ def main():
     # Calculate ENF ########################################################
     print("[*] Beginning ENF Trace Extraction")
     tstart = time.time()
-    for i in tqdm.tqdm(range(N_HOPS),desc="[*] Extracting ENF...",ascii=False,ncols=100):
+    for i in tqdm.tqdm(range(N_HOPS),desc="[*] Extracting ENF...",ascii=False,ncols=100,unit='windows'):
         # Set Window Start And End Variables
         start_i = i * HOP_SIZE
         end_i = start_i + WIN_SIZE
